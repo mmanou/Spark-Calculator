@@ -4,6 +4,7 @@ use Ada.Containers;
 
 with MyString;
 
+-- This is a key value map with key being MyString and value being Integer
 package VariableStore with SPARK_Mode is
     Max_Variable_Length : constant Natural := 1024;
     Max_Entries : constant Ada.Containers.Count_Type := 1000;
@@ -35,9 +36,9 @@ package VariableStore with SPARK_Mode is
     function Equal(V1 : Variable; V2 : Variable) return Boolean;
 
     function Length(D : in Database) return Ada.Containers.Count_Type;
-   
+
     procedure Print(D : in Database);
-   
+
 private
     pragma SPARK_Mode(Off);
 

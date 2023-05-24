@@ -17,7 +17,7 @@ package body VariableStore Is
     begin
         PW_Ordered_Maps.Delete(D.variables,V);
     end Remove;
-   
+
     procedure Print(D : in Database) is
         C : PW_Ordered_Maps.Cursor := PW_Ordered_Maps.No_Element;
         V : Variable;
@@ -32,8 +32,8 @@ package body VariableStore Is
             Ada.Text_IO.Put(" => ");
             Ada.Integer_Text_IO.Put(Value);
             Ada.Text_IO.New_Line;
-            PW_Ordered_Maps.Next(D.Variables, C);         
+            PW_Ordered_Maps.Next(D.Variables, C);
         end loop;
     end Print;
-   
+
 end VariableStore;
