@@ -31,8 +31,8 @@ package body MyStringTokeniser with SPARK_Mode is
             --   This allows the statement `Tokens(OutIndex) := Extent;` to pass array index check
             --   It also allows OutIndex-1 to pass overflow check in the previous loop invariant.
             -- It allow the post condition of the function to pass. By combining this loop invariant
-            --   with the previous one, we can yield an identical condition as the second part of the
-            --   function's post condition.
+            --   with the previous one, we can yield an identical condition as the second part of
+            --   the function's post condition.
             pragma Loop_Invariant (OutIndex = Tokens'First + Count);
 
             -- look for start of next token
