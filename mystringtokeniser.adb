@@ -12,7 +12,7 @@ package body MyStringTokeniser with SPARK_Mode is
         end if;
         Index := S'First;
         while OutIndex <= Tokens'Last and Index <= S'Last and Count < Tokens'Length loop
-            -- This loop invariant ensure:
+            -- This loop invariant ensure that:
             -- None of the tokens has a start index before the start index of the string.
             -- None of the tokens has a non-positive length.
             -- None of the tokens has a length that makes it go beyond the end of the string.
@@ -22,6 +22,17 @@ package body MyStringTokeniser with SPARK_Mode is
                       Tokens(J).Length > 0) and then
                Tokens(J).Length-1 <= S'Last - Tokens(J).Start);
 
+            -- This loop invariant ensure that:
+            -- Count always represent the number of token that has been added to Tokens.
+            -- OutIndex is always the next token to be added to Tokens.
+            --
+            -- This loop invariant is neccessary because:
+            -- It ensure that OutIndex >= Tokens'First.
+            --   This allows the statement `Tokens(OutIndex) := Extent;` to pass array index check
+            --   It also allows OutIndex-1 to pass overflow check in the previous loop invariant.
+            -- It allow the post condition of the function to pass. By combining this loop invariant
+            --   with the previous one, we can yield an identical condition as the second part of the
+            --   function's post condition.
             pragma Loop_Invariant (OutIndex = Tokens'First + Count);
 
             -- look for start of next token
@@ -34,8 +45,10 @@ package body MyStringTokeniser with SPARK_Mode is
                 Extent.Length := 0;
 
                 -- look for end of this token
+                -- Ensure Index + Extent.length don't overflow.
                 while Positive'Last - Extent.Length >= Index
                    and then
+                   -- Ensure Index + Extent.length isn't out of bound.
                    (Index + Extent.Length >= S'First and
                     Index + Extent.Length <= S'Last)
                    and then not Is_Whitespace (S (Index + Extent.Length))
