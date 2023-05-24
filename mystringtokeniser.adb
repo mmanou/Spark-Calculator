@@ -1,8 +1,6 @@
 
 package body MyStringTokeniser with SPARK_Mode is
 
-
-
     procedure Tokenise(S : in String; Tokens : in out TokenArray; Count : out Natural) is
         Index : Positive;
         Extent : TokenExtent;
@@ -14,6 +12,10 @@ package body MyStringTokeniser with SPARK_Mode is
         end if;
         Index := S'First;
         while OutIndex <= Tokens'Last and Index <= S'Last and Count < Tokens'Length loop
+            -- This loop invariant ensure:
+            -- None of the tokens has a start index before the start index of the string.
+            -- None of the tokens has a non-positive length.
+            -- None of the tokens has a length that makes it go beyond the end of the string.
             pragma Loop_Invariant
               (for all J in Tokens'First..OutIndex-1 =>
                  (Tokens(J).Start >= S'First and
@@ -32,7 +34,12 @@ package body MyStringTokeniser with SPARK_Mode is
                 Extent.Length := 0;
 
                 -- look for end of this token
-                while Positive'Last - Extent.Length >= Index and then (Index+Extent.Length >= S'First and Index+Extent.Length <= S'Last) and then not Is_Whitespace(S(Index+Extent.Length)) loop
+                while Positive'Last - Extent.Length >= Index
+                   and then
+                   (Index + Extent.Length >= S'First and
+                    Index + Extent.Length <= S'Last)
+                   and then not Is_Whitespace (S (Index + Extent.Length))
+                loop
                     Extent.Length := Extent.Length + 1;
                 end loop;
 
