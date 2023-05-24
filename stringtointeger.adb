@@ -17,13 +17,13 @@ package body StringToInteger with SPARK_MOde Is
             end if;
             Pos := S'First + 1;
         end if;
-      
-      
+
+
         while Pos <= S'Last loop
             pragma Loop_Invariant (Pos >= S'First and Pos <= S'Last and 
                                      (if Negate then Result <= 0 else Result >= 0));
-         
-            if Integer'Last / 10 < Result then            
+
+            if Integer'Last / 10 < Result then
                 return 0;
             end if;
             if Integer'First / 10 > Result then
@@ -57,5 +57,5 @@ package body StringToInteger with SPARK_MOde Is
         -- won't ever get here but keep SPARK Prover happy
         return Result;
     end From_String;
-   
-end StringToInteger;   
+
+end StringToInteger;
