@@ -30,18 +30,26 @@ package MyStringTokeniser with SPARK_Mode is
       -- For each element (token) in tokens, we perform several checks to ensure that the bounds
       --  of the token indices are within the bounds of the string indices, with the following
       --  checks.
-      -- This allows callers to use Tokens(Index).Start as the left-bound of a range when indexing
-      --  TokenArray, and use (Tokens(Index).Start .. (Tokens(Index).Start + Tokens(Index).Length))
-      --  as the range when indexing within a specific token (that is, an element of Tokens),
-      --  without fear of out-of-bounds errors.
+      -- This allows callers to use token.Start and (token.Start + token.Length - 1) as the range
+      --  when obtaining substring of S without fear of out-of-bounds errors.
       (for all Index in Tokens'First..Tokens'First+(Count-1) =>
            -- Ensure that the first index of each token is no less than
            --  the index of the first character of the string.
+           -- This allows Tokens(Index).Start to be used at the start index when obtaining substring
+           --  of S.
            (Tokens(Index).Start >= S'First and
                   -- Ensure that the token is non-empty.
+                  -- This allows Tokens(Index).Start + Tokens(Index).Length - 1 to be used as the
+                  --  end index when obtaining substring of S without the prover complaining that
+                  --  the end index is smaller than the start index (as required by pre-condition of
+                  --  MyString.Substring.
                   Tokens(Index).Length > 0) and then
              -- If both are true, then we ensure that the index of the last element of the token is
              --  no greater than the upper bound of the string. Avoids index out-of-bounds error.
+             -- This allows Tokens(Index).Start + Tokens(Index).Length - 1 to be used as the end
+             --  index when obtaining substring of S without the prover complaining that then end
+             --  index is beyond the length of S (as required by the pre-condition of
+             --  MyString.Substring)
              Tokens(Index).Length-1 <= S'Last - Tokens(Index).Start);
 
 end MyStringTokeniser;
