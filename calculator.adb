@@ -81,6 +81,7 @@ is
         I : Integer;
     begin
         Stack.Pop (C.St, I);
+        pragma Unreferenced (I);
     end Pop;
 
     procedure Load (C : in out Calculator; V : VariableStore.Variable) is
