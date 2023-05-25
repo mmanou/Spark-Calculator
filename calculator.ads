@@ -102,12 +102,7 @@ is
         VariableStore.Length (C.DB) = VariableStore.Length (C'Old.DB) - 1 and
         Stack."=" (C.St, C'Old.St);
 
-    -- List print things out so it does have effect
-    pragma Warnings (Off, "has no effect");
     procedure List (C : in Calculator) with
+       Global => null,
        Pre => C.Locked = False;
-    pragma Warnings (On, "has no effect");
 end Calculator;
-
--- PIN."=" (C.P, C'Old.P) and Stack."=" (C.St, C'Old.St) and
--- VariableStore."=" (C.DB, C'Old.DB) and C.Locked = C'Old.Locked;
