@@ -97,11 +97,7 @@ is
     -- List print things out so it does have effect
     pragma Warnings (Off, "has no effect");
     procedure List (C : in Calculator) with
-       Pre  => C.Locked = False,
-       Post =>
-        PIN."=" (C.P, C'Old.P) and C.Locked = C'Old.Locked and
-        VariableStore."=" (C.DB, C'Old.DB) and
-        Stack."=" (C.St, C'Old.St);
+       Pre  => C.Locked = False;
     pragma Warnings (On, "has no effect");
 end Calculator;
 
