@@ -8,6 +8,7 @@ with MyStringTokeniser;
 with PIN;
 with Ada.Text_IO; use Ada.Text_IO;
 with Ada.Integer_Text_IO; use Ada.Integer_Text_IO;
+with Calculator;
 
 with Ada.Long_Long_Integer_Text_IO;
 
@@ -77,7 +78,7 @@ begin
 
     declare
         Smallest_Integer : Integer := StringToInteger.From_String("-2147483648");
-        R : Long_Long_Integer := 
+        R : Long_Long_Integer :=
           Long_Long_Integer(Smallest_Integer) * Long_Long_Integer(Smallest_Integer);
     begin
         Put_Line("This is -(2 ** 32) (where ** is exponentiation) :");
