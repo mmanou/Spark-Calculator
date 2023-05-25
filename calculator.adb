@@ -12,6 +12,9 @@ is
     procedure Init (C : out Calculator; P : in PIN.PIN) is
     begin
         C.P := P;
+        C.Locked := True;
+        Stack.Init(C.St);
+        VariableStore.Init(C.DB);
     end Init;
 
     procedure Lock (C : in out Calculator; P : in PIN.PIN) is
