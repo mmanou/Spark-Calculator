@@ -9,13 +9,6 @@ with Ada.Text_IO; use Ada.Text_IO;
 package body Calculator with
    SPARK_Mode
 is
-    type Calculator is record
-        St     : Stack.Stack;
-        DB     : VariableStore.Database;
-        P      : PIN.PIN;
-        Locked : Boolean;
-    end record;
-
     procedure Init (C : out Calculator; P : in PIN.PIN) is
     begin
         C.P := P;

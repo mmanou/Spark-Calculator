@@ -30,22 +30,30 @@ is
         ((PIN."=" (C.P, P) and C.Locked = False) or
          (not PIN."=" (C.P, P) and C.Locked = C'Old.Locked));
 
-    procedure Plus (C : in out Calculator; R : in out Integer) with
-       Pre  => C.Locked = False and C.Stack.Length >= 2,
+    procedure Plus (C : in out Calculator) with
+       Pre  => C.Locked = False and C.St.Length >= 2,
        Post =>
         PIN."=" (C.P, C'Old.P) and C.Locked = C'Old.Locked and
         VariableStore."=" (C.DB, C'Old.DB) and
-        C.Stack.Length = C'Old.Stack.Length - 2;
+        C.St.Length = C'Old.St.Length - 2;
 
-    procedure Minus (C: in out Calculator; R : in out Integer);
+    procedure Minus (C : in out Calculator);
 
-    procedure Multiply (C: in out Calculator; R : in out Integer);
+    procedure Multiply (C : in out Calculator);
 
-    procedure Divide (C: in out Calculator; R : in out Integer);
+    procedure Divide (C : in out Calculator);
 
-    procedure Push (C: in out Calculator; N: MyString.MyString);
+    procedure Push (C : in out Calculator; I : Integer);
 
-    procedure Pop (C: in out Calculator);
+    procedure Pop (C : in out Calculator);
+    --
+    -- procedure Load (C : in out Calculator; N : MyString.MyString);
+    --
+    -- procedure Store (C : in out Calculator; N : MyString.MyString);
+    --
+    -- procedure Remove (C : in out Calculator; N : MyString.MyString);
+    --
+    -- procedure List (C : in Calculator);
 end Calculator;
 
 -- PIN."=" (C.P, C'Old.P) and Stack."=" (C.St, C'Old.St) and
