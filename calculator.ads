@@ -46,14 +46,14 @@ is
     procedure Push (C : in out Calculator; I : Integer);
 
     procedure Pop (C : in out Calculator);
-    --
-    -- procedure Load (C : in out Calculator; N : MyString.MyString);
-    --
-    -- procedure Store (C : in out Calculator; N : MyString.MyString);
-    --
-    -- procedure Remove (C : in out Calculator; N : MyString.MyString);
-    --
-    -- procedure List (C : in Calculator);
+
+    procedure Load (C : in out Calculator; V : VariableStore.Variable);
+
+    procedure Store (C : in out Calculator; V : VariableStore.Variable);
+
+    procedure Remove (C : in out Calculator; V : VariableStore.Variable);
+
+    procedure List (C : in Calculator);
 end Calculator;
 
 -- PIN."=" (C.P, C'Old.P) and Stack."=" (C.St, C'Old.St) and

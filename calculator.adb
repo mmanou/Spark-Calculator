@@ -19,7 +19,7 @@ is
         if (C.Locked = True) then
             return;
         end if;
-        C.P := P;
+        C.P      := P;
         C.Locked := True;
     end Lock;
 
@@ -28,7 +28,7 @@ is
         if (C.Locked = False) then
             return;
         end if;
-        if PIN."="(C.P, P) then
+        if PIN."=" (C.P, P) then
             C.Locked := False;
         end if;
     end Unlock;
@@ -79,4 +79,28 @@ is
     begin
         Stack.Pop (C.St, I);
     end Pop;
+
+    procedure Load (C : in out Calculator; V : VariableStore.Variable) is
+        I : Integer;
+    begin
+        I := VariableStore.Get (C.DB, V);
+        Stack.Push (C.St, I);
+    end Load;
+
+    procedure Store (C : in out Calculator; V : VariableStore.Variable) is
+        I : Integer;
+    begin
+        Stack.Pop (C.St, I);
+        VariableStore.Put (C.DB, V, I);
+    end Store;
+
+    procedure Remove (C : in out Calculator; V : VariableStore.Variable) is
+    begin
+        VariableStore.Remove (C.DB, V);
+    end Remove;
+
+    procedure List (C : in Calculator) is
+    begin
+        VariableStore.Print (C.DB);
+    end List;
 end Calculator;
