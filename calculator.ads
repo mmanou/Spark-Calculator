@@ -53,7 +53,10 @@ is
 
     procedure Remove (C : in out Calculator; V : VariableStore.Variable);
 
+    -- List print things out so it does have effect
+    pragma Warnings (Off, "has no effect");
     procedure List (C : in Calculator);
+    pragma Warnings (On, "has no effect");
 end Calculator;
 
 -- PIN."=" (C.P, C'Old.P) and Stack."=" (C.St, C'Old.St) and
