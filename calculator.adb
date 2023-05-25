@@ -77,10 +77,20 @@ is
         I1 : Integer;
         I2 : Integer;
     begin
+        if C.St.Length < 2 or C.St.Length > 512 then
+            Put_Line ("Invalid operation: Expected 2 numbers on stack.");
+            return;
+        end if;
         Stack.Pop (C.St, I1);
         Stack.Pop (C.St, I2);
         if I2 = 0 then
             Put_Line ("Invalid operation: Divide-by-zero is not allowed.");
+            Stack.Push (C.St, I2);
+            Stack.Push (C.St, I1);
+            return;
+        end if;
+        if I1 = Integer'First and I2 = -1 then
+            Put_Line ("Invalid operation: Result would cause integer overflow.");
             Stack.Push (C.St, I2);
             Stack.Push (C.St, I1);
             return;
