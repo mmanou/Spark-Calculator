@@ -31,28 +31,50 @@ is
         Put_Line ("Hey");
     end Unlock;
 
-    procedure Plus (C : in out Calculator; R : in out Integer) is
+    procedure Plus (C : in out Calculator) is
+        I1 : Integer;
+        I2 : Integer;
     begin
-        Put_Line ("Hey");
+        Stack.Pop (C.St, I1);
+        Stack.Pop (C.St, I2);
+        Stack.Push (C.St, I1 + I2);
     end Plus;
 
-    procedure Minus (C : in out Calculator; R : in out Integer) is
+    procedure Minus (C : in out Calculator) is
+        I1 : Integer;
+        I2 : Integer;
     begin
-        Put_Line ("Hey");
+        Stack.Pop (C.St, I1);
+        Stack.Pop (C.St, I2);
+        Stack.Push (C.St, I1 - I2);
     end Minus;
 
-    procedure Multiply (C : in out Calculator; R : in out Integer) is
+    procedure Multiply (C : in out Calculator) is
+        I1 : Integer;
+        I2 : Integer;
     begin
-        Put_Line ("Hey");
+        Stack.Pop (C.St, I1);
+        Stack.Pop (C.St, I2);
+        Stack.Push (C.St, I1 * I2);
     end Multiply;
 
-    procedure Push (C : in out Calculator; N : MyString.MyString) is
+    procedure Divide (C : in out Calculator) is
+        I1 : Integer;
+        I2 : Integer;
     begin
-        Put_Line ("Hey");
+        Stack.Pop (C.St, I1);
+        Stack.Pop (C.St, I2);
+        Stack.Push (C.St, I1 / I2);
+    end Divide;
+
+    procedure Push (C : in out Calculator; I : Integer) is
+    begin
+        Stack.Push (C.St, I);
     end Push;
 
     procedure Pop (C : in out Calculator) is
+        I : Integer;
     begin
-        Put_Line ("Hey");
+        Stack.Pop (C.St, I);
     end Pop;
 end Calculator;

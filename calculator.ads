@@ -41,6 +41,8 @@ is
 
     procedure Multiply (C: in out Calculator; R : in out Integer);
 
+    procedure Divide (C: in out Calculator; R : in out Integer);
+
     procedure Push (C: in out Calculator; N: MyString.MyString);
 
     procedure Pop (C: in out Calculator);
