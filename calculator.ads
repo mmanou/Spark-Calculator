@@ -1,4 +1,5 @@
-with VariableStore;
+with Ada.Containers; use Ada.Containers;
+with VariableStore;  use VariableStore;
 with PIN;
 with Stack;
 with MyString;
@@ -37,23 +38,68 @@ is
         VariableStore."=" (C.DB, C'Old.DB) and
         C.St.Length = C'Old.St.Length - 2;
 
-    procedure Minus (C : in out Calculator);
+    procedure Minus (C : in out Calculator) with
+       Pre  => C.Locked = False and C.St.Length >= 2,
+       Post =>
+        PIN."=" (C.P, C'Old.P) and C.Locked = C'Old.Locked and
+        VariableStore."=" (C.DB, C'Old.DB) and
+        C.St.Length = C'Old.St.Length - 2;
 
-    procedure Multiply (C : in out Calculator);
+    procedure Multiply (C : in out Calculator) with
+       Pre  => C.Locked = False and C.St.Length >= 2,
+       Post =>
+        PIN."=" (C.P, C'Old.P) and C.Locked = C'Old.Locked and
+        VariableStore."=" (C.DB, C'Old.DB) and
+        C.St.Length = C'Old.St.Length - 2;
 
-    procedure Divide (C : in out Calculator);
+    procedure Divide (C : in out Calculator) with
+       Pre  => C.Locked = False and C.St.Length >= 2,
+       Post =>
+        PIN."=" (C.P, C'Old.P) and C.Locked = C'Old.Locked and
+        VariableStore."=" (C.DB, C'Old.DB) and
+        C.St.Length = C'Old.St.Length - 2;
 
-    procedure Push (C : in out Calculator; I : Integer);
+    procedure Push (C : in out Calculator; I : Integer) with
+       Pre  => C.Locked = False,
+       Post =>
+        PIN."=" (C.P, C'Old.P) and C.Locked = C'Old.Locked and
+        VariableStore."=" (C.DB, C'Old.DB) and
+        C.St.Length = C'Old.St.Length + 1;
 
-    procedure Pop (C : in out Calculator);
+    procedure Pop (C : in out Calculator) with
+       Pre  => C.Locked = False and C.St.Length >= 1,
+       Post =>
+        PIN."=" (C.P, C'Old.P) and C.Locked = C'Old.Locked and
+        VariableStore."=" (C.DB, C'Old.DB) and
+        C.St.Length = C'Old.St.Length - 1;
 
-    procedure Load (C : in out Calculator; V : VariableStore.Variable);
+    procedure Load (C : in out Calculator; V : VariableStore.Variable) with
+       Pre  => C.Locked = False,
+       Post =>
+        PIN."=" (C.P, C'Old.P) and C.Locked = C'Old.Locked and
+        VariableStore."=" (C.DB, C'Old.DB) and
+        C.St.Length = C'Old.St.Length + 1;
 
-    procedure Store (C : in out Calculator; V : VariableStore.Variable);
+    procedure Store (C : in out Calculator; V : VariableStore.Variable) with
+       Pre  => C.Locked = False and C.St.Length >= 1,
+       Post =>
+        PIN."=" (C.P, C'Old.P) and C.Locked = C'Old.Locked and
+        VariableStore.Length (C.DB) = VariableStore.Length (C'Old.DB) + 1 and
+        C.St.Length = C'Old.St.Length - 1;
 
-    procedure Remove (C : in out Calculator; V : VariableStore.Variable);
+    procedure Remove (C : in out Calculator; V : VariableStore.Variable) with
+       Pre  => C.Locked = False,
+       Post =>
+        PIN."=" (C.P, C'Old.P) and C.Locked = C'Old.Locked and
+        VariableStore.Length (C.DB) = VariableStore.Length (C'Old.DB) - 1 and
+        Stack."=" (C.St, C'Old.St);
 
-    procedure List (C : in Calculator);
+    procedure List (C : in Calculator) with
+       Pre  => C.Locked = False,
+       Post =>
+        PIN."=" (C.P, C'Old.P) and C.Locked = C'Old.Locked and
+        VariableStore."=" (C.DB, C'Old.DB) and
+        Stack."=" (C.St, C'Old.St);
 end Calculator;
 
 -- PIN."=" (C.P, C'Old.P) and Stack."=" (C.St, C'Old.St) and

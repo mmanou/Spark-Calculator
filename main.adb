@@ -6,11 +6,11 @@ with MyCommandLine;
 with MyString;
 with MyStringTokeniser;
 with PIN;
-with Ada.Text_IO; use Ada.Text_IO;
+with Ada.Text_IO;         use Ada.Text_IO;
 with Ada.Integer_Text_IO; use Ada.Integer_Text_IO;
-with Calculator;
-
+with Ada.Containers;      use Ada.Containers;
 with Ada.Long_Long_Integer_Text_IO;
+with Calculator;
 
 procedure Main is
     DB : VariableStore.Database;
