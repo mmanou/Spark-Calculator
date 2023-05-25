@@ -1,6 +1,7 @@
 with VariableStore;
 with PIN;
 with Stack;
+with MyString;
 
 package Calculator with
    SPARK_Mode
@@ -29,4 +30,21 @@ is
         ((PIN."=" (C.P, P) and C.Locked = False) or
          (not PIN."=" (C.P, P) and C.Locked = C'Old.Locked));
 
+    procedure Plus (C : in out Calculator; R : in out Integer) with
+       Pre  => C.Locked = False and C.Stack.Length >= 2,
+       Post =>
+        PIN."=" (C.P, C'Old.P) and C.Locked = C'Old.Locked and
+        VariableStore."=" (C.DB, C'Old.DB) and
+        C.Stack.Length = C'Old.Stack.Length - 2;
+
+    procedure Minus (C: in out Calculator; R : in out Integer);
+
+    procedure Multiply (C: in out Calculator; R : in out Integer);
+
+    procedure Push (C: in out Calculator; N: MyString.MyString);
+
+    procedure Pop (C: in out Calculator);
 end Calculator;
+
+-- PIN."=" (C.P, C'Old.P) and Stack."=" (C.St, C'Old.St) and
+-- VariableStore."=" (C.DB, C'Old.DB) and C.Locked = C'Old.Locked;
