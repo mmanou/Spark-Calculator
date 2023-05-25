@@ -83,38 +83,54 @@ is
     end Minus;
 
     procedure Multiply (C : in out Calculator) is
-        I1 : Integer;
-        I2 : Integer;
-    begin
-        Stack.Pop (C.St, I1);
-        Stack.Pop (C.St, I2);
-        Stack.Push (C.St, I1 * I2);
-    end Multiply;
-
-    procedure Divide (C : in out Calculator) is
-        I1 : Integer;
-        I2 : Integer;
+        A : Integer;
+        B : Integer;
     begin
         if C.St.Length < 2 or C.St.Length > 512 then
             Put_Line ("Invalid operation: Expected 2 numbers on stack.");
             return;
         end if;
-        Stack.Pop (C.St, I1);
-        Stack.Pop (C.St, I2);
-        if I2 = 0 then
-            Put_Line ("Invalid operation: Divide-by-zero is not allowed.");
-            Stack.Push (C.St, I2);
-            Stack.Push (C.St, I1);
-            return;
-        end if;
-        if I1 = Integer'First and I2 = -1 then
+        Stack.Pop (C.St, A);
+        Stack.Pop (C.St, B);
+        if ((A > 0 and B > 0) and then A > Integer'Last / B) or
+           ((A < 0 and B > 0) and then A > Integer'First / B) or
+           -- B = -1 will never fail
+           ((A > 0 and B < -1) and then A < Integer'First / B) or
+           ((A < 0 and B < 0) and then A < Integer'Last / B)
+        then
             Put_Line
                ("Invalid operation: Result would cause integer overflow.");
-            Stack.Push (C.St, I2);
-            Stack.Push (C.St, I1);
+            Stack.Push (C.St, B);
+            Stack.Push (C.St, A);
             return;
         end if;
-        Stack.Push (C.St, I1 / I2);
+        Stack.Push (C.St, A * B);
+    end Multiply;
+
+    procedure Divide (C : in out Calculator) is
+        A : Integer;
+        B : Integer;
+    begin
+        if C.St.Length < 2 or C.St.Length > 512 then
+            Put_Line ("Invalid operation: Expected 2 numbers on stack.");
+            return;
+        end if;
+        Stack.Pop (C.St, A);
+        Stack.Pop (C.St, B);
+        if B = 0 then
+            Put_Line ("Invalid operation: Divide-by-zero is not allowed.");
+            Stack.Push (C.St, B);
+            Stack.Push (C.St, A);
+            return;
+        end if;
+        if A = Integer'First and B = -1 then
+            Put_Line
+               ("Invalid operation: Result would cause integer overflow.");
+            Stack.Push (C.St, B);
+            Stack.Push (C.St, A);
+            return;
+        end if;
+        Stack.Push (C.St, A / B);
     end Divide;
 
     procedure Push (C : in out Calculator; I : Integer) is

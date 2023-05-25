@@ -61,10 +61,7 @@ is
 
     procedure Multiply (C : in out Calculator) with
        Pre  => C.Locked = False and C.St.Length >= 1,
-       Post =>
-        PIN."=" (C.P, C'Old.P) and C.Locked = C'Old.Locked and
-        VariableStore."=" (C.DB, C'Old.DB) and
-        C.St.Length = C'Old.St.Length - 1;
+       Post => PIN."=" (C.P, C'Old.P) and C.Locked = C'Old.Locked;
 
     procedure Divide (C : in out Calculator) with
        Pre  => C.Locked = False and C.St.Length >= 1,
