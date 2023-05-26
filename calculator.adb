@@ -2,8 +2,6 @@ with VariableStore;
 with PIN;
 with Stack;
 with MyString;
-
--- delete this later
 with Ada.Text_IO; use Ada.Text_IO;
 
 package body Calculator with

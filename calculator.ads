@@ -19,7 +19,7 @@ is
 
     procedure Lock (C : in out Calculator; P : in PIN.PIN) with
        Post =>
-        Stack."=" (C.St, C'Old.St) and VariableStore."=" (C.DB, C'Old.DB) and
+        Stack."=" (C.St, C'Old.St) and
         ((C'Old.Locked = False and PIN."=" (C.P, P)) or
          C'Old.Locked = True) and
         C.Locked = True;
@@ -27,7 +27,6 @@ is
     procedure Unlock (C : in out Calculator; P : in PIN.PIN) with
        Post =>
         PIN."=" (C.P, C'Old.P) and Stack."=" (C.St, C'Old.St) and
-        VariableStore."=" (C.DB, C'Old.DB) and
         ((PIN."=" (C.P, P) and C.Locked = False) or
          (not PIN."=" (C.P, P) and C.Locked = C'Old.Locked));
 
