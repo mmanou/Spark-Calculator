@@ -46,8 +46,12 @@ is
         end if;
         Stack.Pop (C.St, I1);
         Stack.Pop (C.St, I2);
-        if I1 <= Integer'Last - I2 then
-            Put_Line ("Invalid operation: Result would cause integer overflow.");
+
+        if (if I1 >= 0 and I2 >= 0 then I1 > Integer'Last - I2
+            elsif I1 < 0 and I2 < 0 then I1 < Integer'First - I2)
+        then
+            Put_Line
+               ("Invalid operation: Result would cause integer overflow.");
             Stack.Push (C.St, I2);
             Stack.Push (C.St, I1);
             return;
