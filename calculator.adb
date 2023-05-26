@@ -94,7 +94,8 @@ is
         Stack.Pop (C.St, B);
         if ((A > 0 and B > 0) and then A > Integer'Last / B) or
            ((A < 0 and B > 0) and then A < Integer'First / B) or
-           -- B = -1 will never fail
+            -- B = -1 will never fail
+
            ((A > 0 and B < -1) and then A > Integer'First / B) or
            ((A < 0 and B < 0) and then A < Integer'Last / B)
         then
@@ -135,12 +136,20 @@ is
 
     procedure Push (C : in out Calculator; I : Integer) is
     begin
+        if C.St.Length >= 512 then
+            Put_Line ("Invalid operation: Stack is full.");
+            return;
+        end if;
         Stack.Push (C.St, I);
     end Push;
 
     procedure Pop (C : in out Calculator) is
         I : Integer;
     begin
+        if C.St.Length < 1 or C.St.Length > 512 then
+            Put_Line ("Invalid operation: Stack is empty.");
+            return;
+        end if;
         Stack.Pop (C.St, I);
         pragma Unreferenced (I);
     end Pop;

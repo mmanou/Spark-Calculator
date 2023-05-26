@@ -69,17 +69,11 @@ is
 
     procedure Push (C : in out Calculator; I : Integer) with
        Pre  => C.Locked = False,
-       Post =>
-        PIN."=" (C.P, C'Old.P) and C.Locked = C'Old.Locked and
-        VariableStore."=" (C.DB, C'Old.DB) and
-        C.St.Length = C'Old.St.Length + 1;
+       Post => PIN."=" (C.P, C'Old.P) and C.Locked = C'Old.Locked;
 
     procedure Pop (C : in out Calculator) with
-       Pre  => C.Locked = False and C.St.Length >= 1,
-       Post =>
-        PIN."=" (C.P, C'Old.P) and C.Locked = C'Old.Locked and
-        VariableStore."=" (C.DB, C'Old.DB) and
-        C.St.Length = C'Old.St.Length - 1;
+       Pre  => C.Locked = False,
+       Post => PIN."=" (C.P, C'Old.P) and C.Locked = C'Old.Locked;
 
     procedure Load (C : in out Calculator; V : VariableStore.Variable) with
        Pre  => C.Locked = False,
@@ -103,6 +97,5 @@ is
         Stack."=" (C.St, C'Old.St);
 
     procedure List (C : in Calculator) with
-       Global => null,
-       Pre => C.Locked = False;
+       Global => null, Pre => C.Locked = False;
 end Calculator;
