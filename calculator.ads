@@ -92,7 +92,9 @@ is
        Pre  => not Is_Locked (C),
        Post =>
         PIN."=" (Get_Pin (C), Get_Pin (C'Old)) and
-        Is_Locked (C) = Is_Locked (C'Old);
+        Is_Locked (C) = Is_Locked (C'Old) and
+        (Get_Stack (C).Length - 1 = Get_Stack (C'Old).Length or
+         Get_Stack (C).Length = Get_Stack (C'Old).Length);
 
     procedure Pop (C : in out Calculator) with
        Pre  => not Is_Locked (C),

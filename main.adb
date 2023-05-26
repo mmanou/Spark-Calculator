@@ -1,8 +1,8 @@
 --  First of all, we have ensured that the state for Calculator will not be changed outside of the
---  Calculator package by making Calculator a private type. This will allow us to ensure that the
---  only way to change the state of the Calculator is to call the functions defined in
---  calculator.ads. We can the prove that certain operations won't happen by adding pre and post
---  conditions to those functions.
+--   Calculator package by making Calculator a private type.
+--   This means that the only way to change the state of the Calculator is to call the procedures
+--   defined in calculator.ads. We then prove that operations will not be executed under invalid
+--   circumstances by adding pre- and post-conditions to those procedures.
 --
 --  We have proven the following security properties about our implementation:
 --
@@ -19,10 +19,10 @@
 --  The calculator starts in the locked state when initialised:
 --    This is validated by post-condition: Is_Locked(C)
 --
--- The Unlock, +, -, /, *, Push, Pop, Load, Store, Remove operations do not modify the PIN.
+--  The Unlock, +, -, /, *, Push, Pop, Load, Store, Remove operations do not modify the PIN.
 --    This is validated by post-condition: PIN."=" (Get_Pin(C), Get_Pin(C'Old))
 --
--- The +, -, /, *, push, pop, load, store, remove do not modify the lock state.
+--  The +, -, /, *, push, pop, load, store, remove do not modify the lock state.
 --    This is validated by post-condition: Is_Locked(C) = Is_Locked(C'Old)
 --
 --  The Lock, Unlock and Remove operations do not modify the stack.
@@ -49,6 +49,9 @@
 --      ((Get_Stack(C'Old).Length >= 1 and
 --        (Get_Stack(C).Length = Get_Stack(C'Old).Length - 1 or
 --         Get_Stack(C).Length = Get_Stack(C'Old).Length)) or
+--
+--  The push operation will either either increase the length of the stack by one, or leave
+--    the length unchanged.
 --
 --  The List operation makes no changes to calculator. It is an Input only.
 
