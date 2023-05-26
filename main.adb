@@ -54,7 +54,7 @@ begin
                                        T (2).Start + T (2).Length - 1));
                         begin
                             if Utils.Invalid_Pin (SP) then
-                                Put_Line ("Invalid Pin");
+                                Put_Line ("Invalid Pin.");
                                 return;
                             end if;
                             declare
@@ -64,7 +64,16 @@ begin
                             end;
                         end;
                     elsif Cmd = "lock" then
-                        Put_Line ("Already locked");
+                        Put_Line ("Already locked.");
+                    elsif Cmd = "+" or Cmd = "-" or Cmd = "*" or Cmd = "/" or
+                       Cmd = "push" or Cmd = "pop" or Cmd = "load" or Cmd = "store" or
+                       Cmd = "remove" or Cmd = "list"
+                    then
+                        Put_Line
+                           ("Calculator is locked, cannot perform action.");
+                    else
+                        Put_Line ("Invalid Command.");
+                        return;
                     end if;
                 end;
             end if;
