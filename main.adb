@@ -11,6 +11,7 @@ with Ada.Integer_Text_IO; use Ada.Integer_Text_IO;
 with Ada.Containers;      use Ada.Containers;
 with Ada.Long_Long_Integer_Text_IO;
 with Calculator;
+with Utils;
 
 procedure Main is
     C : Calculator.Calculator;
@@ -23,6 +24,10 @@ begin
 
     if MyCommandLine.Argument_Count < 1 then
         Put_Line ("Need to provide a pin");
+        return;
+    end if;
+    if Utils.Invalid_Pin (MyCommandLine.Argument (1)) then
+        Put_Line ("Invalid Pin");
         return;
     end if;
     Calculator.Init (C, PIN.From_String (MyCommandLine.Argument (1)));
@@ -42,14 +47,21 @@ begin
                 begin
                     if Cmd = "unlock" and NumTokens >= 2 then
                         declare
-                            P : PIN.PIN :=
-                               PIN.From_String
-                                  (Lines.To_String
-                                      (Lines.Substring
-                                          (S, T (2).Start,
-                                           T (2).Start + T (2).Length - 1)));
+                            SP : String :=
+                               Lines.To_String
+                                  (Lines.Substring
+                                      (S, T (2).Start,
+                                       T (2).Start + T (2).Length - 1));
                         begin
-                            Calculator.Unlock (C, P);
+                            if Utils.Invalid_Pin (SP) then
+                                Put_Line ("Invalid Pin");
+                                return;
+                            end if;
+                            declare
+                                P : PIN.PIN := PIN.From_String (SP);
+                            begin
+                                Calculator.Unlock (C, P);
+                            end;
                         end;
                     elsif Cmd = "lock" then
                         Put_Line ("Already locked");
@@ -92,64 +104,59 @@ begin
                         end if;
                     elsif Cmd = "pop" then
                         Calculator.Pop (C);
-                    elsif Cmd = "load" then
-                        if NumTokens >= 2 then
-                            declare
-                                V : VariableStore.Variable :=
-                                   VariableStore.From_String
-                                      (Lines.To_String
-                                          (Lines.Substring
-                                              (S, T (2).Start,
-                                               T (2).Start + T (2).Length -
-                                               1)));
-                            begin
-                                Calculator.Load (C, V);
-                            end;
-                        end if;
-                    elsif Cmd = "store" then
-                        if NumTokens >= 2 then
-                            declare
-                                V : VariableStore.Variable :=
-                                   VariableStore.From_String
-                                      (Lines.To_String
-                                          (Lines.Substring
-                                              (S, T (2).Start,
-                                               T (2).Start + T (2).Length -
-                                               1)));
-                            begin
-                                Calculator.Store (C, V);
-                            end;
-                        end if;
-                    elsif Cmd = "remove" then
-                        if NumTokens >= 2 then
-                            declare
-                                V : VariableStore.Variable :=
-                                   VariableStore.From_String
-                                      (Lines.To_String
-                                          (Lines.Substring
-                                              (S, T (2).Start,
-                                               T (2).Start + T (2).Length -
-                                               1)));
-                            begin
-                                Calculator.Remove (C, V);
-                            end;
-                        end if;
+                    elsif Cmd = "load" and NumTokens >= 2 then
+                        declare
+                            V : VariableStore.Variable :=
+                               VariableStore.From_String
+                                  (Lines.To_String
+                                      (Lines.Substring
+                                          (S, T (2).Start,
+                                           T (2).Start + T (2).Length - 1)));
+                        begin
+                            Calculator.Load (C, V);
+                        end;
+                    elsif Cmd = "store" and NumTokens >= 2 then
+                        declare
+                            V : VariableStore.Variable :=
+                               VariableStore.From_String
+                                  (Lines.To_String
+                                      (Lines.Substring
+                                          (S, T (2).Start,
+                                           T (2).Start + T (2).Length - 1)));
+                        begin
+                            Calculator.Store (C, V);
+                        end;
+                    elsif Cmd = "remove" and NumTokens >= 2 then
+                        declare
+                            V : VariableStore.Variable :=
+                               VariableStore.From_String
+                                  (Lines.To_String
+                                      (Lines.Substring
+                                          (S, T (2).Start,
+                                           T (2).Start + T (2).Length - 1)));
+                        begin
+                            Calculator.Remove (C, V);
+                        end;
                     elsif Cmd = "list" then
                         Calculator.List (C);
-                    elsif Cmd = "lock" then
-                        if NumTokens >= 2 then
+                    elsif Cmd = "lock" and NumTokens >= 2 then
+                        declare
+                            SP : String :=
+                               Lines.To_String
+                                  (Lines.Substring
+                                      (S, T (2).Start,
+                                       T (2).Start + T (2).Length - 1));
+                        begin
+                            if Utils.Invalid_Pin (SP) then
+                                Put_Line ("Invalid Pin");
+                                return;
+                            end if;
                             declare
-                                P : PIN.PIN :=
-                                   PIN.From_String
-                                      (Lines.To_String
-                                          (Lines.Substring
-                                              (S, T (2).Start,
-                                               T (2).Start + T (2).Length -
-                                               1)));
+                                P : PIN.PIN := PIN.From_String (SP);
                             begin
                                 Calculator.Lock (C, P);
                             end;
-                        end if;
+                        end;
                     end if;
                 end;
             end if;

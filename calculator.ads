@@ -59,11 +59,11 @@ is
          C.Locked = C'Old.Locked and Stack."=" (C.St, C'Old.St));
 
     procedure Multiply (C : in out Calculator) with
-       Pre  => C.Locked = False and C.St.Length >= 1,
+       Pre  => C.Locked = False,
        Post => PIN."=" (C.P, C'Old.P) and C.Locked = C'Old.Locked;
 
     procedure Divide (C : in out Calculator) with
-       Pre  => C.Locked = False and C.St.Length >= 1,
+       Pre  => C.Locked = False,
        Post => PIN."=" (C.P, C'Old.P) and C.Locked = C'Old.Locked;
 
     procedure Push (C : in out Calculator; I : Integer) with
