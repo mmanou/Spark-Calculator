@@ -166,6 +166,10 @@ begin
                                 Calculator.Lock (C, P);
                             end;
                         end;
+                    elsif Cmd = "unlock" then
+                        Put_Line ("Already Unlocked.");
+                    else
+                        Put_Line ("Invalid Command.");
                     end if;
                 end;
             end if;
