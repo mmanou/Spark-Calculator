@@ -66,8 +66,8 @@ begin
                     elsif Cmd = "lock" then
                         Put_Line ("Already locked.");
                     elsif Cmd = "+" or Cmd = "-" or Cmd = "*" or Cmd = "/" or
-                       Cmd = "push" or Cmd = "pop" or Cmd = "load" or Cmd = "store" or
-                       Cmd = "remove" or Cmd = "list"
+                       Cmd = "push" or Cmd = "pop" or Cmd = "load" or
+                       Cmd = "store" or Cmd = "remove" or Cmd = "list"
                     then
                         Put_Line
                            ("Calculator is locked, cannot perform action.");
@@ -113,38 +113,32 @@ begin
                         end if;
                     elsif Cmd = "pop" then
                         Calculator.Pop (C);
-                    elsif Cmd = "load" and NumTokens >= 2 then
+                    elsif (Cmd = "load" or Cmd = "store" or Cmd = "remove") and
+                       NumTokens >= 2
+                    then
                         declare
-                            V : VariableStore.Variable :=
-                               VariableStore.From_String
-                                  (Lines.To_String
-                                      (Lines.Substring
-                                          (S, T (2).Start,
-                                           T (2).Start + T (2).Length - 1)));
+                            SV : String :=
+                               Lines.To_String
+                                  (Lines.Substring
+                                      (S, T (2).Start,
+                                       T (2).Start + T (2).Length - 1));
                         begin
-                            Calculator.Load (C, V);
-                        end;
-                    elsif Cmd = "store" and NumTokens >= 2 then
-                        declare
-                            V : VariableStore.Variable :=
-                               VariableStore.From_String
-                                  (Lines.To_String
-                                      (Lines.Substring
-                                          (S, T (2).Start,
-                                           T (2).Start + T (2).Length - 1)));
-                        begin
-                            Calculator.Store (C, V);
-                        end;
-                    elsif Cmd = "remove" and NumTokens >= 2 then
-                        declare
-                            V : VariableStore.Variable :=
-                               VariableStore.From_String
-                                  (Lines.To_String
-                                      (Lines.Substring
-                                          (S, T (2).Start,
-                                           T (2).Start + T (2).Length - 1)));
-                        begin
-                            Calculator.Remove (C, V);
+                            if SV'Length > VariableStore.Max_Variable_Length then
+                                Put_Line ("Variable name too long.");
+                                return;
+                            end if;
+                            declare
+                                V : VariableStore.Variable :=
+                                   VariableStore.From_String (SV);
+                            begin
+                                if Cmd = "load" then
+                                    Calculator.Load (C, V);
+                                elsif Cmd = "store" then
+                                    Calculator.Store (C, V);
+                                elsif Cmd = "remove" then
+                                    Calculator.Remove (C, V);
+                                end if;
+                            end;
                         end;
                     elsif Cmd = "list" then
                         Calculator.List (C);
