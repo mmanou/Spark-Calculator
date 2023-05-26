@@ -2,16 +2,16 @@
 --
 --  The Lock, +, -, /, *, push, pop, load, store, remove operations can only be
 --    performed while in the unlocked state.
---    This is validated by pre-condition: C.Locked = False
+--    This is validated by pre-condition: not Is_Locked(C)
 --
 --  The Unlock operation can only be performed while in the locked state.
---    This is validated by pre-condition: C.Locked = True
+--    This is validated by pre-condition: Is_Locked(C)
 --
 --  The calculator starts in the locked state when initialised:
---    This is validated by post-condition: C.Locked = True
+--    This is validated by post-condition: Is_Locked(C)
 --
 -- The Unlock, +, -, /, *, Push, Pop, Load, Store, Remove operations do not modify the PIN.
---    This is validated by post-condition: PIN."=" (C.P, C'Old.P)
+--    This is validated by post-condition: PIN."=" (Get_Pin(C), Get_Pin(C'Old))
 --
 -- The +, -, /, *, push, pop, load, store, remove do not modify the lock state.
 --    This is validated by post-condition: C.Locked = C'Old.Locked
