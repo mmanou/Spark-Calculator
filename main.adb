@@ -44,9 +44,9 @@ with MyCommandLine;
 with MyString;
 with MyStringTokeniser;
 with PIN;
-with Ada.Text_IO;         use Ada.Text_IO;
+with Ada.Text_IO; use Ada.Text_IO;
 with Ada.Integer_Text_IO; use Ada.Integer_Text_IO;
-with Ada.Containers;      use Ada.Containers;
+with Ada.Containers; use Ada.Containers;
 with Ada.Long_Long_Integer_Text_IO;
 with Calculator;
 with Utils;
@@ -54,8 +54,8 @@ with Utils;
 procedure Main is
     C : Calculator.Calculator;
     package Lines is new MyString (Max_MyString_Length => 2_048);
-    S         : Lines.MyString;
-    T         : MyStringTokeniser.TokenArray (1 .. 2) :=
+    S : Lines.MyString;
+    T : MyStringTokeniser.TokenArray (1 .. 2) :=
        (others => (Start => 1, Length => 0));
     NumTokens : Natural;
 begin
@@ -71,7 +71,7 @@ begin
     Calculator.Init (C, PIN.From_String (MyCommandLine.Argument (1)));
 
     loop
-        if C.Locked then
+        if Calculator.Is_Locked (C) then
             Put ("locked>   ");
         else
             Put ("unlocked> ");
@@ -135,7 +135,7 @@ begin
 
             -- Start processing
             -- Note some if statement have unneccessary condition to speed up proof time
-            if C.Locked then
+            if Calculator.Is_Locked (C) then
                 if Cmd = "unlock" and NumTokens = 2 then
                     declare
                         SP : String :=
