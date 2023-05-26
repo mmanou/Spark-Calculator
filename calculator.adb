@@ -93,9 +93,9 @@ is
         Stack.Pop (C.St, A);
         Stack.Pop (C.St, B);
         if ((A > 0 and B > 0) and then A > Integer'Last / B) or
-           ((A < 0 and B > 0) and then A > Integer'First / B) or
+           ((A < 0 and B > 0) and then A < Integer'First / B) or
            -- B = -1 will never fail
-           ((A > 0 and B < -1) and then A < Integer'First / B) or
+           ((A > 0 and B < -1) and then A > Integer'First / B) or
            ((A < 0 and B < 0) and then A < Integer'Last / B)
         then
             Put_Line
