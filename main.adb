@@ -33,7 +33,11 @@ begin
     Calculator.Init (C, PIN.From_String (MyCommandLine.Argument (1)));
 
     loop
-        Put ("locked>   ");
+        if C.Locked then
+            Put ("locked>   ");
+        else
+            Put ("unlocked> ");
+        end if;
         Lines.Get_Line (S);
         MyStringTokeniser.Tokenise (Lines.To_String (S), T, NumTokens);
         if NumTokens < 1 then
