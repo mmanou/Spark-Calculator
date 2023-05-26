@@ -1,4 +1,4 @@
---  We have proved the following:
+--  We have proven the following security properties about our implementation:
 --
 --  The Lock, +, -, /, *, push, pop, load, store, remove operations can only be
 --    performed while in the unlocked state.
@@ -6,6 +6,9 @@
 --
 --  The Unlock operation can only be performed while in the locked state.
 --    This is validated by pre-condition: Is_Locked(C)
+--
+--  After performing the Lock operation, the stored PIN is equal to the provided PIN.
+--    This is validated by post-condition: PIN."=" (Get_Pin(C), P)
 --
 --  The calculator starts in the locked state when initialised:
 --    This is validated by post-condition: Is_Locked(C)
