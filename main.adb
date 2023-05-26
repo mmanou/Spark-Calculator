@@ -5,7 +5,10 @@
 --    This is validated by pre-condition: C.Locked = False
 --
 --  The Unlock operation can only be performed while in the locked state.
---    This is validated by pre-condition: C.Locked = True;
+--    This is validated by pre-condition: C.Locked = True
+--
+--  The calculator starts in the locked state when initialised:
+--    This is validated by post-condition: C.Locked = True
 --
 -- The Unlock, +, -, /, *, Push, Pop, Load, Store, Remove operations do not modify the PIN.
 --    This is validated by post-condition: PIN."=" (C.P, C'Old.P)
@@ -34,7 +37,7 @@
 --      (C'Old.St.Length >= 1 and
 --       (C.St.Length = C'Old.St.Length - 1 or C.St.Length = C'Old.St.Length))
 --
---  The List operation makes no changes to calculator. Tt is an Input only.
+--  The List operation makes no changes to calculator. It is an Input only.
 
 pragma SPARK_Mode (On);
 
