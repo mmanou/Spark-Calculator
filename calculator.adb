@@ -62,8 +62,8 @@ is
         Stack.Pop (C.St, A);
         Stack.Pop (C.St, B);
 
-        if (if A >= 0 and B >= 0 then A < Integer'Last - B
-            elsif A < 0 and B < 0 then A > Integer'First - B)
+        if (if A >= 0 and B <= 0 then A > Integer'Last + B
+            elsif A < 0 and B > 0 then A < Integer'First + B)
         then
             Put_Line
                ("Invalid operation: Result would cause integer overflow.");
