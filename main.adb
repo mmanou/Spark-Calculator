@@ -33,141 +33,163 @@ begin
     Calculator.Init (C, PIN.From_String (MyCommandLine.Argument (1)));
 
     loop
-        if C.Locked then
-            Put ("locked>   ");
-            Lines.Get_Line (S);
-            MyStringTokeniser.Tokenise (Lines.To_String (S), T, NumTokens);
-            if NumTokens >= 1 then
-                declare
-                    Cmd : String :=
-                       Lines.To_String
-                          (Lines.Substring
-                              (S, T (1).Start,
-                               T (1).Start + T (1).Length - 1));
-                begin
-                    if Cmd = "unlock" and NumTokens >= 2 then
-                        declare
-                            SP : String :=
-                               Lines.To_String
-                                  (Lines.Substring
-                                      (S, T (2).Start,
-                                       T (2).Start + T (2).Length - 1));
-                        begin
-                            if Utils.Invalid_Pin (SP) then
-                                Put_Line ("Invalid Pin.");
-                                return;
-                            end if;
-                            declare
-                                P : PIN.PIN := PIN.From_String (SP);
-                            begin
-                                Calculator.Unlock (C, P);
-                            end;
-                        end;
-                    elsif Cmd = "lock" then
-                        Put_Line ("Already locked.");
-                    elsif Cmd = "+" or Cmd = "-" or Cmd = "*" or Cmd = "/" or
-                       Cmd = "push" or Cmd = "pop" or Cmd = "load" or
-                       Cmd = "store" or Cmd = "remove" or Cmd = "list"
-                    then
-                        Put_Line
-                           ("Calculator is locked, cannot perform action.");
-                    else
-                        Put_Line ("Invalid Command.");
-                        return;
-                    end if;
-                end;
-            end if;
-        else
-            Put ("unlocked> ");
-            Lines.Get_Line (S);
-            MyStringTokeniser.Tokenise (Lines.To_String (S), T, NumTokens);
-            if NumTokens >= 1 then
-                declare
-                    Cmd : String :=
-                       Lines.To_String
-                          (Lines.Substring
-                              (S, T (1).Start,
-                               T (1).Start + T (1).Length - 1));
-                begin
-                    if Cmd = "+" then
-                        Calculator.Plus (C);
-                    elsif Cmd = "-" then
-                        Calculator.Minus (C);
-                    elsif Cmd = "*" then
-                        Calculator.Multiply (C);
-                    elsif Cmd = "/" then
-                        Calculator.Divide (C);
-                    elsif Cmd = "push" then
-                        if NumTokens >= 2 then
-                            declare
-                                I : Integer :=
-                                   StringToInteger.From_String
-                                      (Lines.To_String
-                                          (Lines.Substring
-                                              (S, T (2).Start,
-                                               T (2).Start + T (2).Length -
-                                               1)));
-                            begin
-                                Calculator.Push (C, I);
-                            end;
-                        end if;
-                    elsif Cmd = "pop" then
-                        Calculator.Pop (C);
-                    elsif (Cmd = "load" or Cmd = "store" or Cmd = "remove") and
-                       NumTokens >= 2
-                    then
-                        declare
-                            SV : String :=
-                               Lines.To_String
-                                  (Lines.Substring
-                                      (S, T (2).Start,
-                                       T (2).Start + T (2).Length - 1));
-                        begin
-                            if SV'Length > VariableStore.Max_Variable_Length then
-                                Put_Line ("Variable name too long.");
-                                return;
-                            end if;
-                            declare
-                                V : VariableStore.Variable :=
-                                   VariableStore.From_String (SV);
-                            begin
-                                if Cmd = "load" then
-                                    Calculator.Load (C, V);
-                                elsif Cmd = "store" then
-                                    Calculator.Store (C, V);
-                                elsif Cmd = "remove" then
-                                    Calculator.Remove (C, V);
-                                end if;
-                            end;
-                        end;
-                    elsif Cmd = "list" then
-                        Calculator.List (C);
-                    elsif Cmd = "lock" and NumTokens >= 2 then
-                        declare
-                            SP : String :=
-                               Lines.To_String
-                                  (Lines.Substring
-                                      (S, T (2).Start,
-                                       T (2).Start + T (2).Length - 1));
-                        begin
-                            if Utils.Invalid_Pin (SP) then
-                                Put_Line ("Invalid Pin");
-                                return;
-                            end if;
-                            declare
-                                P : PIN.PIN := PIN.From_String (SP);
-                            begin
-                                Calculator.Lock (C, P);
-                            end;
-                        end;
-                    elsif Cmd = "unlock" then
-                        Put_Line ("Already Unlocked.");
-                    else
-                        Put_Line ("Invalid Command.");
-                        return;
-                    end if;
-                end;
-            end if;
+        Put ("locked>   ");
+        Lines.Get_Line (S);
+        MyStringTokeniser.Tokenise (Lines.To_String (S), T, NumTokens);
+        if NumTokens < 1 then
+            Put_Line ("Invalid Input: empty command.");
+            return;
         end if;
+        if Lines.To_String (S)'Length > 2_048 then
+            Put_Line ("Invalid Input: command too long.");
+            return;
+        end if;
+        declare
+            Cmd : String :=
+               Lines.To_String
+                  (Lines.Substring
+                      (S, T (1).Start, T (1).Start + T (1).Length - 1));
+        begin
+
+            -- Assert valid input
+            if (Cmd = "lock" or Cmd = "unlock") and NumTokens = 2 then
+                declare
+                    SP : String :=
+                       Lines.To_String
+                          (Lines.Substring
+                              (S, T (2).Start,
+                               T (2).Start + T (2).Length - 1));
+                begin
+                    if Utils.Invalid_Pin (SP) then
+                        Put_Line ("Invalid Pin.");
+                        return;
+                    end if;
+                end;
+            elsif (Cmd = "load" or Cmd = "store" or Cmd = "remove") and
+               NumTokens = 2
+            then
+                declare
+                    SV : String :=
+                       Lines.To_String
+                          (Lines.Substring
+                              (S, T (2).Start,
+                               T (2).Start + T (2).Length - 1));
+                begin
+                    if SV'Length > VariableStore.Max_Variable_Length then
+                        Put_Line ("Variable name too long.");
+                        return;
+                    end if;
+                end;
+            elsif not
+               ((
+                 (Cmd = "+" or Cmd = "-" or Cmd = "*" or Cmd = "/" or
+                  Cmd = "pop" or Cmd = "list") and
+                 NumTokens = 1) or
+                (Cmd = "push" and NumTokens = 2))
+            then
+                Put_Line ("Invalid command.");
+                return;
+            end if;
+
+            -- Start processing
+            -- Note some if statement have unneccessary condition to speed up proof time
+            if C.Locked then
+                if Cmd = "unlock" and NumTokens = 2 then
+                    declare
+                        SP : String :=
+                           Lines.To_String
+                              (Lines.Substring
+                                  (S, T (2).Start,
+                                   T (2).Start + T (2).Length - 1));
+                    begin
+                        if Utils.Invalid_Pin (SP) then
+                            Put_Line ("Invalid Pin.");
+                            return;
+                        end if;
+                        declare
+                            P : PIN.PIN := PIN.From_String (SP);
+                        begin
+                            Calculator.Unlock (C, P);
+                        end;
+                    end;
+                elsif Cmd = "lock" then
+                    Put_Line ("Already locked.");
+                else
+                    Put_Line ("Calculator is locked, cannot perform action.");
+                end if;
+            else
+                if Cmd = "+" then
+                    Calculator.Plus (C);
+                elsif Cmd = "-" then
+                    Calculator.Minus (C);
+                elsif Cmd = "*" then
+                    Calculator.Multiply (C);
+                elsif Cmd = "/" then
+                    Calculator.Divide (C);
+                elsif Cmd = "push" and NumTokens = 2 then
+                    declare
+                        I : Integer :=
+                           StringToInteger.From_String
+                              (Lines.To_String
+                                  (Lines.Substring
+                                      (S, T (2).Start,
+                                       T (2).Start + T (2).Length - 1)));
+                    begin
+                        Calculator.Push (C, I);
+                    end;
+                elsif Cmd = "pop" then
+                    Calculator.Pop (C);
+                elsif (Cmd = "load" or Cmd = "store" or Cmd = "remove") and
+                   NumTokens = 2
+                then
+                    declare
+                        SV : String :=
+                           Lines.To_String
+                              (Lines.Substring
+                                  (S, T (2).Start,
+                                   T (2).Start + T (2).Length - 1));
+                    begin
+                        if SV'Length > VariableStore.Max_Variable_Length then
+                            Put_Line ("Variable name too long.");
+                            return;
+                        end if;
+                        declare
+                            V : VariableStore.Variable :=
+                               VariableStore.From_String (SV);
+                        begin
+                            if Cmd = "load" then
+                                Calculator.Load (C, V);
+                            elsif Cmd = "store" then
+                                Calculator.Store (C, V);
+                            elsif Cmd = "remove" then
+                                Calculator.Remove (C, V);
+                            end if;
+                        end;
+                    end;
+                elsif Cmd = "list" then
+                    Calculator.List (C);
+                elsif Cmd = "lock" and NumTokens = 2 then
+                    declare
+                        SP : String :=
+                           Lines.To_String
+                              (Lines.Substring
+                                  (S, T (2).Start,
+                                   T (2).Start + T (2).Length - 1));
+                    begin
+                        if Utils.Invalid_Pin (SP) then
+                            Put_Line ("Invalid Pin");
+                            return;
+                        end if;
+                        declare
+                            P : PIN.PIN := PIN.From_String (SP);
+                        begin
+                            Calculator.Lock (C, P);
+                        end;
+                    end;
+                elsif Cmd = "unlock" then
+                    Put_Line ("Already Unlocked.");
+                end if;
+            end if;
+        end;
     end loop;
 end Main;
