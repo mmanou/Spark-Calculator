@@ -170,6 +170,7 @@ begin
                         Put_Line ("Already Unlocked.");
                     else
                         Put_Line ("Invalid Command.");
+                        return;
                     end if;
                 end;
             end if;
