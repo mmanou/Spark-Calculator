@@ -1,3 +1,9 @@
+--  First of all, we have ensured that the state for Calculator will not be changed outside of the
+--  Calculator package by making Calculator a private type. This will allow us to ensure that the
+--  only way to change the state of the Calculator is to call the functions defined in
+--  calculator.ads. We can the prove that certain operations won't happen by adding pre and post
+--  conditions to those functions.
+--
 --  We have proven the following security properties about our implementation:
 --
 --  The Lock, +, -, /, *, push, pop, load, store, remove operations can only be
@@ -45,9 +51,6 @@
 --         Get_Stack(C).Length = Get_Stack(C'Old).Length)) or
 --
 --  The List operation makes no changes to calculator. It is an Input only.
---
---  Further more, we have ensured that the state for Calculator will not be changed outside of the
---  Calculator package by making Calculator a private type.
 
 pragma SPARK_Mode (On);
 
