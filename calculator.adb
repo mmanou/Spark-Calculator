@@ -69,6 +69,12 @@ is
     begin
         Stack.Pop (C.St, I1);
         Stack.Pop (C.St, I2);
+        if (I2 = 0) then
+            Put_Line ("Invalid operation: Divide-by-zero is not allowed.");
+            Stack.Push (C.St, I2);
+            Stack.Push (C.St, I1);
+            return;
+        end if;
         Stack.Push (C.St, I1 / I2);
     end Divide;
 

@@ -57,7 +57,7 @@ is
        Post =>
         PIN."=" (C.P, C'Old.P) and C.Locked = C'Old.Locked and
         VariableStore."=" (C.DB, C'Old.DB) and
-        C.St.Length = C'Old.St.Length - 2;
+        (C.St.Length = C'Old.St.Length - 2 or Stack."=" (C.St, C'Old.St));
 
     procedure Push (C : in out Calculator; I : Integer) with
        Pre  => C.Locked = False,
@@ -97,7 +97,7 @@ is
     -- List print things out so it does have effect
     pragma Warnings (Off, "has no effect");
     procedure List (C : in Calculator) with
-       Pre  => C.Locked = False;
+       Pre => C.Locked = False;
     pragma Warnings (On, "has no effect");
 end Calculator;
 
