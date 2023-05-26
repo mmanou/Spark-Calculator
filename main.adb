@@ -17,30 +17,37 @@
 --    This is validated by post-condition: PIN."=" (Get_Pin(C), Get_Pin(C'Old))
 --
 -- The +, -, /, *, push, pop, load, store, remove do not modify the lock state.
---    This is validated by post-condition: C.Locked = C'Old.Locked
+--    This is validated by post-condition: Is_Locked(C) = Is_Locked(C'Old)
 --
 --  The Lock, Unlock and Remove operations do not modify the stack.
---    This is validated by post-condition: Stack."=" (C.St, C'Old.St)
+--    This is validated by post-condition: Stack."=" (Get_Stack(C), Get_Stack(C'Old))
 --
 --  The +, -, *, and / operations do not modify the stack if it contains less than 2 Integers.
---    This is validated by post-condition: (C'Old.St.Length < 2 and Stack."=" (C.St, C'Old.St))
+--    This is validated by post-condition: (Get_Stack(C'Old).Length < 2 and Stack."=" (Get_Stack(C),
+--    Get_Stack(C'Old))))
 --
 --  The store operation does not modify the stack if it contains less than 1 Integer.
---    This is validated by post-condition: (C'Old.St.Length < 1 and Stack."=" (C.St, C'Old.St))
+--    This is validated by post-condition: (Get_Stack(C'Old).Length < 1 and Stack."=" (Get_Stack(C),
+--    Get_Stack(C'Old))))
 --
 --  If the stack contains at least 2 Integers, the +, -, *, and / operations will leave it
 --    it in a state with either the same number of elements, or one fewer.
 --    This is validated by post-condition:
---      (C'Old.St.Length >= 2 and
---       (C.St.Length = C'Old.St.Length - 1 or C.St.Length = C'Old.St.Length))
+--      ((Get_Stack(C'Old).Length >= 2 and
+--        (Get_Stack(C).Length = Get_Stack(C'Old).Length - 1 or
+--         Get_Stack(C).Length = Get_Stack(C'Old).Length)) or
 --
 --  If the stack contains at least 1 Integer, the store operation will leave it it in
 --     a state with either the same number of elements, or one fewer.
 --    This is validated by post-condition:
---      (C'Old.St.Length >= 1 and
---       (C.St.Length = C'Old.St.Length - 1 or C.St.Length = C'Old.St.Length))
+--      ((Get_Stack(C'Old).Length >= 1 and
+--        (Get_Stack(C).Length = Get_Stack(C'Old).Length - 1 or
+--         Get_Stack(C).Length = Get_Stack(C'Old).Length)) or
 --
 --  The List operation makes no changes to calculator. It is an Input only.
+--
+--  Further more, we have ensured that the state for Calculator will not be changed outside of the
+--  Calculator package by making Calculator a private type.
 
 pragma SPARK_Mode (On);
 
@@ -50,9 +57,9 @@ with MyCommandLine;
 with MyString;
 with MyStringTokeniser;
 with PIN;
-with Ada.Text_IO; use Ada.Text_IO;
+with Ada.Text_IO;         use Ada.Text_IO;
 with Ada.Integer_Text_IO; use Ada.Integer_Text_IO;
-with Ada.Containers; use Ada.Containers;
+with Ada.Containers;      use Ada.Containers;
 with Ada.Long_Long_Integer_Text_IO;
 with Calculator;
 with Utils;
@@ -60,8 +67,8 @@ with Utils;
 procedure Main is
     C : Calculator.Calculator;
     package Lines is new MyString (Max_MyString_Length => 2_048);
-    S : Lines.MyString;
-    T : MyStringTokeniser.TokenArray (1 .. 2) :=
+    S         : Lines.MyString;
+    T         : MyStringTokeniser.TokenArray (1 .. 2) :=
        (others => (Start => 1, Length => 0));
     NumTokens : Natural;
 begin
