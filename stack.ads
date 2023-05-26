@@ -16,7 +16,7 @@ is
         St.Length = St'Old.Length + 1 and St.Content (St.Length) = I;
 
     procedure Pop (St : in out Stack; I : out Integer) with
-       Pre  => St.Length > 1 and St.Length <= 512,
+       Pre  => St.Length >= 1 and St.Length <= 512,
        Post =>
         St.Length = St'Old.Length - 1 and St.Content = St'Old.Content and
         I = St.Content (St'Old.Length);

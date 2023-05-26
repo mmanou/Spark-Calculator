@@ -32,32 +32,37 @@ is
          (not PIN."=" (C.P, P) and C.Locked = C'Old.Locked));
 
     procedure Plus (C : in out Calculator) with
-       Pre  => C.Locked = False and C.St.Length >= 2,
+       Pre  => C.Locked = False,
        Post =>
-        PIN."=" (C.P, C'Old.P) and C.Locked = C'Old.Locked and
-        VariableStore."=" (C.DB, C'Old.DB) and
-        C.St.Length = C'Old.St.Length - 2;
+       -- enough inputs => try operation
+
+        (C'Old.St.Length >= 2 and PIN."=" (C.P, C'Old.P) and
+         C.Locked = C'Old.Locked and C.St.Length = C'Old.St.Length - 1) or
+       -- not enough inputs => do nothing
+
+        (C'Old.St.Length < 2 and PIN."=" (C.P, C'Old.P) and
+         C.Locked = C'Old.Locked and Stack."=" (C.St, C'Old.St));
 
     procedure Minus (C : in out Calculator) with
-       Pre  => C.Locked = False and C.St.Length >= 2,
+       Pre  => C.Locked = False and C.St.Length >= 1,
        Post =>
         PIN."=" (C.P, C'Old.P) and C.Locked = C'Old.Locked and
         VariableStore."=" (C.DB, C'Old.DB) and
-        C.St.Length = C'Old.St.Length - 2;
+        C.St.Length = C'Old.St.Length - 1;
 
     procedure Multiply (C : in out Calculator) with
-       Pre  => C.Locked = False and C.St.Length >= 2,
+       Pre  => C.Locked = False and C.St.Length >= 1,
        Post =>
         PIN."=" (C.P, C'Old.P) and C.Locked = C'Old.Locked and
         VariableStore."=" (C.DB, C'Old.DB) and
-        C.St.Length = C'Old.St.Length - 2;
+        C.St.Length = C'Old.St.Length - 1;
 
     procedure Divide (C : in out Calculator) with
-       Pre  => C.Locked = False and C.St.Length >= 2,
+       Pre  => C.Locked = False and C.St.Length >= 1,
        Post =>
         PIN."=" (C.P, C'Old.P) and C.Locked = C'Old.Locked and
         VariableStore."=" (C.DB, C'Old.DB) and
-        (C.St.Length = C'Old.St.Length - 2 or Stack."=" (C.St, C'Old.St));
+        (C.St.Length = C'Old.St.Length - 1 or Stack."=" (C.St, C'Old.St));
 
     procedure Push (C : in out Calculator; I : Integer) with
        Pre  => C.Locked = False,
