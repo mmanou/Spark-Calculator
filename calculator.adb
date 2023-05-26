@@ -37,35 +37,49 @@ is
     end Unlock;
 
     procedure Plus (C : in out Calculator) is
-        I1 : Integer;
-        I2 : Integer;
+        A : Integer;
+        B : Integer;
     begin
         if C.St.Length < 2 or C.St.Length > 512 then
             Put_Line ("Invalid operation: Expected 2 numbers on stack.");
             return;
         end if;
-        Stack.Pop (C.St, I1);
-        Stack.Pop (C.St, I2);
+        Stack.Pop (C.St, A);
+        Stack.Pop (C.St, B);
 
-        if (if I1 >= 0 and I2 >= 0 then I1 > Integer'Last - I2
-            elsif I1 < 0 and I2 < 0 then I1 < Integer'First - I2)
+        if (if A >= 0 and B >= 0 then A > Integer'Last - B
+            elsif A < 0 and B < 0 then A < Integer'First - B)
         then
             Put_Line
                ("Invalid operation: Result would cause integer overflow.");
-            Stack.Push (C.St, I2);
-            Stack.Push (C.St, I1);
+            Stack.Push (C.St, B);
+            Stack.Push (C.St, A);
             return;
         end if;
-        Stack.Push (C.St, I1 + I2);
+        Stack.Push (C.St, A + B);
     end Plus;
 
     procedure Minus (C : in out Calculator) is
-        I1 : Integer;
-        I2 : Integer;
+        A : Integer;
+        B : Integer;
     begin
-        Stack.Pop (C.St, I1);
-        Stack.Pop (C.St, I2);
-        Stack.Push (C.St, I1 - I2);
+        if C.St.Length < 2 or C.St.Length > 512 then
+            Put_Line ("Invalid operation: Expected 2 numbers on stack.");
+            return;
+        end if;
+        Stack.Pop (C.St, A);
+        Stack.Pop (C.St, B);
+
+        if (if A >= 0 and B >= 0 then A < Integer'Last - B
+            elsif A < 0 and B < 0 then A > Integer'First - B)
+        then
+            Put_Line
+               ("Invalid operation: Result would cause integer overflow.");
+            Stack.Push (C.St, B);
+            Stack.Push (C.St, A);
+            return;
+        end if;
+        Stack.Push (C.St, A - B);
     end Minus;
 
     procedure Multiply (C : in out Calculator) is
@@ -94,7 +108,8 @@ is
             return;
         end if;
         if I1 = Integer'First and I2 = -1 then
-            Put_Line ("Invalid operation: Result would cause integer overflow.");
+            Put_Line
+               ("Invalid operation: Result would cause integer overflow.");
             Stack.Push (C.St, I2);
             Stack.Push (C.St, I1);
             return;

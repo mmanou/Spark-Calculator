@@ -37,18 +37,27 @@ is
        -- enough inputs => try operation
 
         (C'Old.St.Length >= 2 and PIN."=" (C.P, C'Old.P) and
-         C.Locked = C'Old.Locked and C.St.Length = C'Old.St.Length - 1) or
+         C.Locked = C'Old.Locked and
+         (C.St.Length = C'Old.St.Length - 1 or
+          C.St.Length = C'Old.St.Length)) or
        -- not enough inputs => do nothing
 
         (C'Old.St.Length < 2 and PIN."=" (C.P, C'Old.P) and
          C.Locked = C'Old.Locked and Stack."=" (C.St, C'Old.St));
 
     procedure Minus (C : in out Calculator) with
-       Pre  => C.Locked = False and C.St.Length >= 1,
+       Pre  => C.Locked = False,
        Post =>
-        PIN."=" (C.P, C'Old.P) and C.Locked = C'Old.Locked and
-        VariableStore."=" (C.DB, C'Old.DB) and
-        C.St.Length = C'Old.St.Length - 1;
+       -- enough inputs => try operation
+
+        (C'Old.St.Length >= 2 and PIN."=" (C.P, C'Old.P) and
+         C.Locked = C'Old.Locked and
+         (C.St.Length = C'Old.St.Length - 1 or
+          C.St.Length = C'Old.St.Length)) or
+       -- not enough inputs => do nothing
+
+        (C'Old.St.Length < 2 and PIN."=" (C.P, C'Old.P) and
+         C.Locked = C'Old.Locked and Stack."=" (C.St, C'Old.St));
 
     procedure Multiply (C : in out Calculator) with
        Pre  => C.Locked = False and C.St.Length >= 1,
