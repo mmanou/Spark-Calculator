@@ -18,6 +18,7 @@ is
        Post => PIN."=" (C.P, P) and C.Locked = True;
 
     procedure Lock (C : in out Calculator; P : in PIN.PIN) with
+       Pre  => C.Locked = False,
        Post =>
         Stack."=" (C.St, C'Old.St) and
         ((C'Old.Locked = False and PIN."=" (C.P, P)) or
@@ -25,10 +26,11 @@ is
         C.Locked = True;
 
     procedure Unlock (C : in out Calculator; P : in PIN.PIN) with
+       Pre  => C.Locked = True,
        Post =>
         PIN."=" (C.P, C'Old.P) and Stack."=" (C.St, C'Old.St) and
         ((PIN."=" (C.P, P) and C.Locked = False) or
-         (not PIN."=" (C.P, P) and C.Locked = C'Old.Locked));
+         (not PIN."=" (C.P, P) and C.Locked = True));
 
     procedure Plus (C : in out Calculator) with
        Pre  => C.Locked = False,

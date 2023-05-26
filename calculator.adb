@@ -17,18 +17,12 @@ is
 
     procedure Lock (C : in out Calculator; P : in PIN.PIN) is
     begin
-        if (C.Locked = True) then
-            return;
-        end if;
         C.P      := P;
         C.Locked := True;
     end Lock;
 
     procedure Unlock (C : in out Calculator; P : in PIN.PIN) is
     begin
-        if (C.Locked = False) then
-            return;
-        end if;
         if PIN."=" (C.P, P) then
             C.Locked := False;
         end if;
