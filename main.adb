@@ -1,3 +1,6 @@
+-- Authors: Michael Manoussakis 834867
+--          Shuang Li 1044137
+--
 --  First of all, we have ensured that the state for Calculator will not be changed outside of the
 --   Calculator package by making Calculator a private type.
 --   This means that the only way to change the state of the Calculator is to call the procedures
