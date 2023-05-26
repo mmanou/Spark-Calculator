@@ -78,21 +78,18 @@ is
        Pre  => C.Locked = False,
        Post =>
         PIN."=" (C.P, C'Old.P) and C.Locked = C'Old.Locked and
-        VariableStore."=" (C.DB, C'Old.DB) and
-        C.St.Length = C'Old.St.Length + 1;
+        (C.St.Length = C'Old.St.Length or C.St.Length - 1 = C'Old.St.Length);
 
     procedure Store (C : in out Calculator; V : VariableStore.Variable) with
-       Pre  => C.Locked = False and C.St.Length >= 1,
+       Pre  => C.Locked = False,
        Post =>
         PIN."=" (C.P, C'Old.P) and C.Locked = C'Old.Locked and
-        VariableStore.Length (C.DB) = VariableStore.Length (C'Old.DB) + 1 and
-        C.St.Length = C'Old.St.Length - 1;
+        (C.St.Length = C'Old.St.Length - 1 or C.St.Length = C'Old.St.Length);
 
     procedure Remove (C : in out Calculator; V : VariableStore.Variable) with
        Pre  => C.Locked = False,
        Post =>
         PIN."=" (C.P, C'Old.P) and C.Locked = C'Old.Locked and
-        VariableStore.Length (C.DB) = VariableStore.Length (C'Old.DB) - 1 and
         Stack."=" (C.St, C'Old.St);
 
     procedure List (C : in Calculator) with

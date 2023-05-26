@@ -155,6 +155,14 @@ is
     procedure Load (C : in out Calculator; V : VariableStore.Variable) is
         I : Integer;
     begin
+        if C.St.Length < 0 or C.St.Length >= 512 then
+            Put_Line ("Invalid operation: Stack is full.");
+            return;
+        end if;
+        if not VariableStore.Has_Variable (C.DB, V) then
+            Put_Line ("Invalid operation: Variable not found in storage.");
+            return;
+        end if;
         I := VariableStore.Get (C.DB, V);
         Stack.Push (C.St, I);
     end Load;
@@ -162,12 +170,28 @@ is
     procedure Store (C : in out Calculator; V : VariableStore.Variable) is
         I : Integer;
     begin
+        if C.St.Length < 1 or C.St.Length > 512 then
+            Put_Line
+               ("Invalid operation: Expected at least 1 number on stack.");
+            return;
+        end if;
+        if VariableStore.Length (C.DB) >= VariableStore.Max_Entries and
+           not VariableStore.Has_Variable (C.DB, V)
+        then
+            Put_Line
+               ("Invalid operation: Storage is full. Try removing first.");
+            return;
+        end if;
         Stack.Pop (C.St, I);
         VariableStore.Put (C.DB, V, I);
     end Store;
 
     procedure Remove (C : in out Calculator; V : VariableStore.Variable) is
     begin
+        if not VariableStore.Has_Variable (C.DB, V) then
+            Put_Line ("Invalid operation: Variable not found in storage.");
+            return;
+        end if;
         VariableStore.Remove (C.DB, V);
     end Remove;
 
